@@ -16,10 +16,9 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-export default function Home() {
+export default function TestPage() {
   const [isLoading, setIsLoading] = useState(false);
-  const [paymentLink, setPaymentLink] = useState<string>("");
-  const [error, setError] = useState<string>("");
+  const [formData, setFormData] = useState<FormData | null>(null);
 
   const {
     register,
@@ -32,31 +31,13 @@ export default function Home() {
 
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
-    setError("");
-    setPaymentLink("");
 
-    try {
-      const response = await fetch("/api/generate-payment-link", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || "Failed to generate payment link");
-      }
-
-      setPaymentLink(result.linkUrl);
-      reset();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
-      setIsLoading(false);
-    }
+    setFormData(data);
+    reset();
+    setIsLoading(false);
   };
 
   return (
@@ -65,10 +46,10 @@ export default function Home() {
         <div className="bg-white shadow-lg rounded-lg p-8">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Generating Payment Links
+              Test Payment Link Form
             </h1>
             <p className="text-gray-600">
-              Fill in the details below to generate a payment link
+              This is a test version without API integration
             </p>
           </div>
 
@@ -81,7 +62,7 @@ export default function Home() {
               <input
                 type="text"
                 {...register("studentName")}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Enter student name"
               />
               {errors.studentName && (
@@ -99,7 +80,7 @@ export default function Home() {
               <input
                 type="email"
                 {...register("studentEmail")}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="abc@gmail.com"
               />
               {errors.studentEmail && (
@@ -117,7 +98,7 @@ export default function Home() {
               <input
                 type="tel"
                 {...register("studentPhone")}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="+9234567890"
               />
               {errors.studentPhone && (
@@ -135,7 +116,7 @@ export default function Home() {
               <input
                 type="number"
                 {...register("payableAmount", { valueAsNumber: true })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="899"
               />
               {errors.payableAmount && (
@@ -153,7 +134,7 @@ export default function Home() {
               <input
                 type="number"
                 {...register("amountPitched", { valueAsNumber: true })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="5000"
               />
               {errors.amountPitched && (
@@ -171,7 +152,7 @@ export default function Home() {
               <input
                 type="text"
                 {...register("referralId")}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="KC1801"
               />
               {errors.referralId && (
@@ -187,33 +168,19 @@ export default function Home() {
               disabled={isLoading}
               className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {isLoading
-                ? "Generating Payment Link..."
-                : "Generate Payment Link"}
+              {isLoading ? "Processing..." : "Submit Form"}
             </button>
           </form>
 
-          {/* Error Message */}
-          {error && (
-            <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-md">
-              <p className="text-sm text-red-600">{error}</p>
-            </div>
-          )}
-
           {/* Success Message */}
-          {paymentLink && (
+          {formData && (
             <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-md">
               <p className="text-sm text-green-800 mb-2">
-                Payment link generated successfully!
+                Form submitted successfully!
               </p>
-              <a
-                href={paymentLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-blue-600 hover:text-blue-800 break-all"
-              >
-                {paymentLink}
-              </a>
+              <pre className="text-xs text-gray-600 overflow-auto">
+                {JSON.stringify(formData, null, 2)}
+              </pre>
             </div>
           )}
         </div>
