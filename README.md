@@ -162,3 +162,24 @@ The application includes the following form fields matching the n8n workflow:
 ## License
 
 MIT License - see LICENSE file for details
+
+## Environment Variables
+
+Create a `.env` file or set these in your Vercel dashboard:
+
+```
+# Cashfree API
+CASHFREE_API_URL=https://api.cashfree.com/pg/links
+CASHFREE_API_VERSION=2025-01-01
+CASHFREE_CLIENT_ID=your_client_id
+CASHFREE_CLIENT_SECRET=your_client_secret
+
+# Google Sheets (Service Account)
+GOOGLE_SERVICE_ACCOUNT_EMAIL=your_service_account_email
+GOOGLE_PRIVATE_KEY="your_private_key"
+GOOGLE_SHEETS_DOCUMENT_ID=your_spreadsheet_id
+GOOGLE_SHEETS_SHEET_NAME=your_sheet_name
+```
+
+- Do NOT wrap the private key in extra quotes in the Vercel dashboard.
+- If using Vercel, set these in Project Settings > Environment Variables.
