@@ -176,7 +176,7 @@ CASHFREE_CLIENT_SECRET=your_client_secret
 
 # Google Sheets (Service Account)
 GOOGLE_SERVICE_ACCOUNT_EMAIL=your_service_account_email
-GOOGLE_PRIVATE_KEY="your_private_key"
+GOOGLE_PRIVATE_KEY=your_private_key
 GOOGLE_SHEETS_DOCUMENT_ID=your_spreadsheet_id
 GOOGLE_SHEETS_SHEET_NAME=your_sheet_name
 ```

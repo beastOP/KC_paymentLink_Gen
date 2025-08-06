@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
     };
 
     // Make request to Cashfree API
-    const response = await fetch(`${config.cashfree.baseUrl}/links`, {
+    const response = await fetch(config.cashfree.baseUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
