@@ -6,11 +6,13 @@
   "devCommand": "npm run dev",
   "regions": ["bom1"],
   "env": {
-    "CASHFREE_CLIENT_ID": "@cashfree_client_id",
-    "CASHFREE_CLIENT_SECRET": "@cashfree_client_secret",
-    "GOOGLE_SERVICE_ACCOUNT_EMAIL": "@google_service_account_email",
-    "GOOGLE_PRIVATE_KEY": "@google_private_key",
-    "GOOGLE_SPREADSHEET_ID": "@google_spreadsheet_id",
-    "GOOGLE_SHEET_NAME": "@google_sheet_name"
+    "CASHFREE_CLIENT_ID": "",
+    "CASHFREE_CLIENT_SECRET": "",
+    "CASHFREE_API_URL": "",
+    "CASHFREE_API_VERSION": "",
+    "GOOGLE_SERVICE_ACCOUNT_EMAIL": "",
+    "GOOGLE_PRIVATE_KEY": "",
+    "GOOGLE_SHEETS_DOCUMENT_ID": "",
+    "GOOGLE_SHEETS_SHEET_NAME": ""
   }
 } 
