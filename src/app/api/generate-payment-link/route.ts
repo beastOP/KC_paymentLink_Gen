@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
-import { appendToGoogleSheets } from '@/lib/google-sheets';
-import { config, validateConfig } from '@/lib/config';
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+import { appendToGoogleSheets } from "@/lib/google-sheets";
+import { config, validateConfig } from "@/lib/config";
 
 const requestSchema = z.object({
   studentName: z.string().min(1),
@@ -14,8 +14,9 @@ const requestSchema = z.object({
 
 // Generate a unique ID similar to the n8n workflow
 function generateUniqueId(): string {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
-  let uuid = '';
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+  let uuid = "";
   for (let i = 0; i < 50; i++) {
     uuid += chars.charAt(Math.floor(Math.random() * chars.length));
   }
@@ -26,7 +27,7 @@ export async function POST(request: NextRequest) {
   try {
     // Validate configuration
     validateConfig();
-    
+
     const body = await request.json();
     const validatedData = requestSchema.parse(body);
 
@@ -41,7 +42,7 @@ export async function POST(request: NextRequest) {
         customer_phone: validatedData.studentPhone,
       },
       link_amount: validatedData.payableAmount,
-      link_currency: 'INR',
+      link_currency: "INR",
       link_id: linkId,
       link_minimum_partial_amount: 20,
       link_notes: {
@@ -52,27 +53,27 @@ export async function POST(request: NextRequest) {
         send_sms: false,
       },
       link_partial_payments: false,
-      link_purpose: 'Course',
+      link_purpose: "Course",
     };
 
     // Make request to Cashfree API
     const response = await fetch(`${config.cashfree.baseUrl}/links`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'x-api-version': config.cashfree.apiVersion,
-        'x-client-id': config.cashfree.clientId,
-        'x-client-secret': config.cashfree.clientSecret,
+        "Content-Type": "application/json",
+        "x-api-version": config.cashfree.apiVersion,
+        "x-client-id": config.cashfree.clientId,
+        "x-client-secret": config.cashfree.clientSecret,
       },
       body: JSON.stringify(cashfreePayload),
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error('Cashfree API error:', errorData);
+      console.error("Cashfree API error:", errorData);
       return NextResponse.json(
-        { error: 'Failed to generate payment link from Cashfree' },
-        { status: 500 }
+        { error: "Failed to generate payment link from Cashfree" },
+        { status: 500 },
       );
     }
 
@@ -95,7 +96,7 @@ export async function POST(request: NextRequest) {
     try {
       await appendToGoogleSheets(sheetData);
     } catch (sheetsError) {
-      console.error('Failed to save to Google Sheets:', sheetsError);
+      console.error("Failed to save to Google Sheets:", sheetsError);
       // Continue with the response even if Google Sheets fails
     }
 
@@ -103,21 +104,21 @@ export async function POST(request: NextRequest) {
       success: true,
       linkUrl: cashfreeResponse.link_url,
       linkId: cashfreeResponse.link_id,
-      message: 'Payment link generated successfully',
+      message: "Payment link generated successfully",
     });
   } catch (error) {
-    console.error('Error generating payment link:', error);
-    
+    console.error("Error generating payment link:", error);
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Invalid request data', details: error.errors },
-        { status: 400 }
+        { error: "Invalid request data", details: error.issues },
+        { status: 400 },
       );
     }
 
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+      { error: "Internal server error" },
+      { status: 500 },
     );
   }
-} 
+}
